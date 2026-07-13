@@ -43,9 +43,10 @@ bookkeeping easier, we will assume that each plaquette has only one tail, and
 that each edge can only host a tail for one of the two plaquettes it is shared
 by. For the purposes of our simulation this will not make a difference.
 
-
-This separated arrangement means that any code which just needs to deal with
-plaquettes only needs ``C``. Only edge sampling code needs the tailed lattice.
+Below is the documentation for the datastructures implementing the above scheme.
+Separating out the plaquette structure from tail information has the additional
+benefit that code which just needs to deal with plaquettes only needs ``C``,
+and only edge sampling code needs the full tailed latticd ``T``.
 
 ## Untailed Lattice
 
@@ -64,7 +65,10 @@ sibling_dart_ids
 
 ```@docs
 TailedLattice
+TailedLattice(p::Plaquettes, tails::Dict{Int, Int})
 EdgeType
-EdgeInfo
-
+EdgeLocation
+num_edges
+edge_location
+edge_ids
 ```

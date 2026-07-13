@@ -5,7 +5,8 @@ makedocs(
     modules=[LatticeDatastructures],
     format=Documenter.HTML(edit_link="main"),
     pages=[
-        "Manual" => "index.md",
-        "Testing" => "testing.md",
+        "Overview" => "index.md",
+        "Recipes" => "recipes.md",
+        "Visualization" => "visualization.md",
     ]
 )
