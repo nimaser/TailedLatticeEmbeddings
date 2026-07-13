@@ -1,6 +1,6 @@
 ## Introduction
 
-We need a computational representation of the tailed lattice ``T``  we use to
+We need a computational representation of the tailed lattice ``T`` used to
 realize the QEC code we are simulating. In particular, we need a datastructure
 capable of representing ``T``'s embedding in a closed and oriented 2D manifold.
 
@@ -9,7 +9,7 @@ deformations of their embeddings, the embedding does not have any geometric
 features we need to keep track of, only topological ones: in particular, we need
 to store the adjacency relations between the lattice's plaquettes, which are
 needed by the decoder and curve diagram implementations. In addition, we also
-need to be able to sample edges during the noise phase of the simulation, and
+need to be able to sample edges during the noise phase of the simulation and
 know what plaquettes will be affected by noise on a particular edge.
 
 [Combinatorial maps](https://en.wikipedia.org/wiki/Combinatorial_map) are one
@@ -26,27 +26,23 @@ information about the plaquettes and edges of an embedded graph, and a
 combinatorial map could be used to store it without needing reference to the
 primal graph. Therefore, a combinatorial map of the dual graph ``D`` of ``T``
 is another good candidate. However, the tails present a slight complication:
-each tail in ``T`` will cause a self-edge in ``D``. Furthermore, each tail
-splits its host edge into two. In principle this is okay, but being able to
-assume that
-- each plaquette shares at most one edge with any other plaquette
-- every vertex has three different plaquettes meeting at it (equivalently:
-  no plaquette can be its own neighbor)
+each tail in ``T`` will cause a self-edge in ``D``, as a tail is an edge where
+a plaquette borders itself. Furthermore, each tail splits its host edge into
+two. In principle this is okay, but that information isn't strictly needed to
+understand the adjacency of plaquettes, and makes plaquette queries slightly
+more complex. Therefore, we will instead enforce that the untailed version
+``U`` of ``T`` does not have any self-neighbors and use a combinatorial map
+``C`` of ``U``'s dual graph to store the plaquette adjacency.
 
-makes the implementation of curve diagrams much easier. Therefore, we will
-instead enforce these conditions on the untailed version of ``T``, ``U``, and
-use a combinatorial map ``C`` of ``U``'s dual graph to store the plaquette
-adjacency.
-
-We will store the tails as additional metadata on top of ``C``. To make
+We will then store the tails as additional metadata on top of ``C``. To make
 bookkeeping easier, we will assume that each plaquette has only one tail, and
 that each edge can only host a tail for one of the two plaquettes it is shared
 by. For the purposes of our simulation this will not make a difference.
 
 Below is the documentation for the datastructures implementing the above scheme.
 Separating out the plaquette structure from tail information has the additional
-benefit that code which just needs to deal with plaquettes only needs ``C``,
-and only edge sampling code needs the full tailed latticd ``T``.
+benefit that code which only deals with plaquettes needs only ``C``, and only
+edge sampling code needs the full tailed lattice ``T``.
 
 ## Untailed Lattice
 
